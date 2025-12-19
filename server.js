@@ -13,13 +13,23 @@ app.get('/', (req, res) => {
 });
 
 // 포켓몬 정보 얻기
+const pokemonCache = [];
 app.get('/pokemon/:id', async (req, res) => {
   try {
     const { id } = req.params;
+    // 캐싱
+    const cachedData = pokemonCache.find(item => item.id === Number(id));
+    // 캐시에 있으면 곧바로 응답
+    if (cachedData) {
+      return res.json(cachedData);
+    }
+
+    // 캐시에 없으면 API로 요청 후 응답
     const resData = await getPokemon(id);
+    pokemonCache.push(resData);
     res.json(resData);
   } catch (err) {
-    console.log('translation 오류', err.message);
+    console.log('포켓몬 정보 얻기 오류', err.message);
   }
 });
 
