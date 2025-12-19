@@ -15,13 +15,50 @@ const TRANSLATE_REQ_KEY = {
   honorific: 'honorific',
 }
 
-getPokemonHandler();
+let curId = 1;
+getPokemonHandler(curId);
 
-function getPokemonHandler() {
+const dictNum = document.getElementById('dict-num');
+const MAX_ID = 1025;
+dictNum.addEventListener('click', () => {
+  const inputStr = prompt(`검색할 번호를 입력하세요. (1-${MAX_ID})`);
+  if (inputStr === null || inputStr === '') return;
+
+  const num = Number(inputStr);
+  if (1 <= num && num <= MAX_ID) {
+    curId = num;
+    getPokemonHandler(curId);
+  }
+  else {
+    alert('잘못된 번호입니다.');
+  }
+});
+
+const prevPokemonBtn = document.getElementById('prev-pokemon-btn');
+const nextPokemonBtn = document.getElementById('next-pokemon-btn');
+prevPokemonBtn.addEventListener('click', () => {
+  if (curId > 1) {
+    getPokemonHandler(--curId);
+  }
+});
+nextPokemonBtn.addEventListener('click', () => {
+  if (curId < MAX_ID) {
+    getPokemonHandler(++curId);
+  }
+});
+
+const criesBtn = document.getElementById('cries-btn');
+const criesAudio = document.getElementById('cries-audio');
+criesAudio.volume = 0.05;
+criesBtn.addEventListener('click', () => {
+  criesAudio.play();
+});
+
+function getPokemonHandler(identifier) {
   (async () => {
     try {
       // 포켓몬 데이터 가져오기
-      const detectResData = await getPokemon(1);
+      const detectResData = await getPokemon(identifier);
       console.log(detectResData);
 
       // 포켓몬 초상화
@@ -42,17 +79,16 @@ function getPokemonHandler() {
         container.appendChild(pokemonName);
         // 태그
         for (const type of types) {
-          // 태그
           const pokemonInfo = document.createElement('div');
           pokemonInfo.className = 'text-white w-auto bg-gray-700 px-2 py-1 rounded-full text-xs font-bold';
           container.appendChild(pokemonInfo);
           const pokemonInfoValue = document.createElement('span');
-          pokemonInfoValue.className = '';
           pokemonInfoValue.textContent = type.type.name;
           pokemonInfo.appendChild(pokemonInfoValue);
         }
       };
-      // 이름
+      const pokemonMainInfos = document.getElementById('pokemon-main-infos');
+      pokemonMainInfos.replaceChildren();
       addMainInfo(name, ...types);
 
       // 포켓몬 서브 정보
@@ -75,14 +111,26 @@ function getPokemonHandler() {
         pokemonInfoValue.textContent = value;
         pokemonInfo.appendChild(pokemonInfoValue);
       };
-      addSubInfo('H', `${(height * 0.1).toFixed(2)}m`);
-      addSubInfo('W', `${(weight * 0.1).toFixed(2)}kg`);
+      const pokemonSubInfos = document.getElementById('pokemon-sub-infos');
+      pokemonSubInfos.replaceChildren();
+      addSubInfo('H', `${Number((height * 0.1).toFixed(2)).toString()}m`);
+      addSubInfo('W', `${Number((weight * 0.1).toFixed(2)).toString()}kg`);
       addSubInfo('HP', stats[0].base_stat);
       addSubInfo('ATK', stats[1].base_stat);
       addSubInfo('DEF', stats[2].base_stat);
       addSubInfo('EXATK', stats[3].base_stat);
       addSubInfo('EXDEF', stats[4].base_stat);
       addSubInfo('SPD', stats[5].base_stat);
+
+      // 포켓몬 번호
+      const { id } = detectResData;
+      const dictNum = document.getElementById('dict-num');
+      dictNum.textContent = id.toString().padStart(3, '0');
+
+      // 포켓몬 울음소리
+      const { cries: { latest } } = detectResData;
+      const criesAudio = document.getElementById('cries-audio');
+      criesAudio.src = latest;
     }
     catch (err) {
       console.error('포켓몬 요청 처리 오류:', err);
