@@ -1,20 +1,3 @@
-/**
- * @property {string} source (Required) 원본 텍스트(Source)의 언어 코드
- * @property {string} target (Required) 번역할 텍스트(Target)의 언어 코드
- * @property {string} text (Required) 번역할 텍스트
- * @property {string} glossaryKey (Optional) 용어집 아이디
- * @property {string} replaceInfo (Optional) 치환 번역 인덱스
- * @property {string} honorific (Optional) 높임말 적용 여부
- */
-const TRANSLATE_REQ_KEY = {
-  source: 'source',
-  target: 'target',
-  text: 'text',
-  glossaryKey: 'glossaryKey',
-  replaceInfo: 'replaceInfo',
-  honorific: 'honorific',
-}
-
 let curId = 1;
 getPokemonHandler(curId);
 
@@ -58,16 +41,16 @@ function getPokemonHandler(identifier) {
   (async () => {
     try {
       // 포켓몬 데이터 가져오기
-      const detectResData = await getPokemon(identifier);
-      console.log(detectResData);
+      const resData = await getPokemon(identifier);
+      console.log(resData);
 
       // 포켓몬 초상화
       const pokemonPortrait = document.getElementById('pokemon-portrait-wrapper').getElementsByTagName('img')[0];
-      const { sprites: { front_default } } = detectResData;
+      const { sprites: { front_default } } = resData;
       pokemonPortrait.src = front_default;
 
       // 포켓몬 메인 정보
-      const { name, types } = detectResData;
+      const { name, types } = resData;
       const addMainInfo = (name, ...types) => {
         // 메인 정보 컨테이너
         const container = document.getElementById('pokemon-main-infos');
@@ -92,7 +75,7 @@ function getPokemonHandler(identifier) {
       addMainInfo(name, ...types);
 
       // 포켓몬 서브 정보
-      const { height, weight, stats } = detectResData;
+      const { height, weight, stats } = resData;
       const addSubInfo = (key, value) => {
         // 서브 정보 컨테이너
         const container = document.getElementById('pokemon-sub-infos');
@@ -123,12 +106,12 @@ function getPokemonHandler(identifier) {
       addSubInfo('SPD', stats[5].base_stat);
 
       // 포켓몬 번호
-      const { id } = detectResData;
+      const { id } = resData;
       const dictNum = document.getElementById('dict-num');
       dictNum.textContent = id.toString().padStart(3, '0');
 
       // 포켓몬 울음소리
-      const { cries: { latest } } = detectResData;
+      const { cries: { latest } } = resData;
       const criesAudio = document.getElementById('cries-audio');
       criesAudio.src = latest;
     }
