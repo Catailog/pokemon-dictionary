@@ -75,7 +75,7 @@ function getPokemonHandler(identifier) {
         // 이름
         const pokemonName = document.createElement('p');
         pokemonName.className = 'text-gray-800 w-auto text-lg font-extrabold';
-        pokemonName.textContent = name;
+        pokemonName.textContent = toPascalCase(name);
         container.appendChild(pokemonName);
         // 태그
         for (const type of types) {
@@ -83,7 +83,7 @@ function getPokemonHandler(identifier) {
           pokemonInfo.className = 'text-white w-auto bg-gray-700 px-2 py-1 rounded-full text-xs font-bold';
           container.appendChild(pokemonInfo);
           const pokemonInfoValue = document.createElement('span');
-          pokemonInfoValue.textContent = type.type.name;
+          pokemonInfoValue.textContent = toPascalCase(type.type.name);
           pokemonInfo.appendChild(pokemonInfoValue);
         }
       };
@@ -143,4 +143,12 @@ async function getPokemon(id) {
   const URL = `${BASE_URL}/${id}`;
   const res = await fetch(URL);
   return await res.json();
+}
+
+function toPascalCase(str) {
+  return str
+    .replace(/[_\-\s]+/g, ' ')
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join('');
 }
