@@ -11,6 +11,10 @@
 
 ## Third-Party Assets
 
+### Data Source
+
+[PokeAPI](https://pokeapi.co/): 모든 포켓몬 데이터는 PokeAPI를 통해 제공받았습니다.
+
 ### SVG Assets
 
 | Asset          | Author    | License | Source                                            |

@@ -1,3 +1,5 @@
+import { fetchPokemonData } from './pokemon.js';
+
 let curId = 1;
 getPokemonHandler(curId);
 
@@ -41,7 +43,7 @@ function getPokemonHandler(identifier) {
   (async () => {
     try {
       // 포켓몬 데이터 가져오기
-      const resData = await getPokemon(identifier);
+      const resData = await fetchPokemonData(identifier);
       console.log(resData);
 
       // 포켓몬 초상화
@@ -119,19 +121,6 @@ function getPokemonHandler(identifier) {
       console.error('포켓몬 요청 처리 오류:', err);
     }
   })();
-}
-
-async function getPokemon(id) {
-  const BASE_URL = 'https://pokeapi.co/api/v2/pokemon';
-  const URL = `${BASE_URL}/${id}`;
-
-  const res = await fetch(URL);
-
-  if (!res.ok) {
-    throw new Error(`네트워크 응답 에러: ${res.status}`);
-  }
-
-  return await res.json();
 }
 
 function toPascalCase(str) {
