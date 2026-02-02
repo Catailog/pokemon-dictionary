@@ -1,26 +1,14 @@
 {
   "name": "pokemon-dictionary",
+  "private": true,
   "version": "1.0.0",
-  "description": "",
-  "main": "api.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Catailog/pokemon-dictionary.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Catailog/pokemon-dictionary/issues"
-  },
-  "homepage": "https://github.com/Catailog/pokemon-dictionary#readme",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^5.2.1"
-  },
-  "type": "module"
+  "devDependencies": {
+    "vite": "^7.2.4"
+  }
 }
